@@ -20,8 +20,21 @@ Loop through the S3 dictionary
 """
 from collections import defaultdict
 from datetime import datetime
+import hashlib
 import os
-import boto
+
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+
+def md5(path, block_size=8192):
+    f = open(path)
+    md5 = hashlib.md5()
+    while True:
+        data = f.read(block_size)
+        if not data:
+            break
+        md5.update(data)
+    return (md5.hexdigest(), md5.digest())
 
 def get_local_files(path):
     """Returns a dictionary of all the files under a path."""
@@ -34,42 +47,38 @@ def get_local_files(path):
     path_len = len(path) + 1
     for root, dirs, filenames in os.walk(path):
         for name in filenames:
-            full = join(root, name)
-            mtime = stat(full).st_mtime
-            files[full[path_len:]] = datetime.fromtimestamp(mtime)
+            full_path = join(root, name)
+            files[full_path[path_len:]] = md5(full_path) 
     return files
 
 def get_s3_files(bucket):
+    if not bucket:
+        raise ValueError("No bucket specified")
+
     files = defaultdict(lambda: None)
     for file in bucket.list():
         if file.name.endswith('$folder$'):
             continue
-        files[file.name] = datetime.strptime(file.last_modified, "%Y-%m-%dT%H:%M:%S.000Z")
-    
+        files[file.name] = file
     return files
 
-def get_new_files(local_files, s3_files):
-    new_files = []
-    for name, modified in local_files.iteritems():
-        uploaded = s3_files[name]
-        if uploaded is None or uploaded < modified:
-            new_files.append(name)
-        del s3_files[name]
-    return new_files
-
+def update_s3(local_files, s3_files, folder):
+    join = os.path.join
+    for filename, hash in local_files.iteritems():
+        s3_key = s3_files[filename]
+        if s3_key is None or s3_key.etag[1:-1] != hash[0]:
+            s3_key.set_contents_from_filename(join(folder, filename), md5=hash)
+            print "Updated %s" % filename
+        
 if __name__ == '__main__':
     key_id = '1NHPA19WDCS29ABACF82'
     secret = 'IGUn6kKBN3zUeZPo/JuyWQDa0W1FxMkU400CrKZ/'
-    conn = boto.connect_s3(key_id, secret)
+    conn = S3Connection(key_id, secret)
     bucket = conn.get_bucket('nerdgames')
     s3_files = get_s3_files(bucket)
     local_files = get_local_files('/Users/varikin/code/nerdgames')
-    print s3_files
-    print "\n\n"
-    print local_files
-    print "\n\n"
-    updated_files = get_new_files(local_files, s3_files)
-    print updated_files
+    updated_files = update_s3(local_files, s3_files, '/Users/varikin/code/nerdgames')
+
 
     
 
