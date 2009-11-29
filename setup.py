@@ -4,16 +4,26 @@ use_setuptools()
 
 from setuptools import setup
 
-# Utility function to read the README file.  
-# Used for the long_description.  It's nice, because now 1) we have a top level
-# README file and 2) it's easier to type in the README file than to put a raw
-# string in below ...
+def requirements():
+    """Returns the requirements for this package.
+
+    If the `json` module can not be imported, then `simplejson` is needed.
+    `Simplejson` was added to Python 2.6 as `json`.
+    """
+    requires = ['boto']
+    try:
+        import json
+    except ImportError:
+        requires.append('simplejson')
+    return requires
+
 def read(fname):
+    """Utility function to read the README file."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "tigre",
-    version = "0.1.3",
+    version = "0.1.5",
     author = "John Shimek",
     author_email = "varikin@gmail.com",
     description = ("Syncs directories to buckets on S3."),
@@ -31,6 +41,6 @@ setup(
         "Operating System :: Unix",
         "Programming Language :: Python",
     ],
-    install_requires = ['boto', 'simplejson'],
+    install_requires = requirements(),
     zip_safe = False,
 ) 
