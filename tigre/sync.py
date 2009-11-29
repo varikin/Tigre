@@ -7,44 +7,9 @@ from datetime import datetime
 import hashlib
 import os
 from os.path import join
-from optparse import OptionParser
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-def parse_options():
-    parser = OptionParser()
-    parser.add_option('-c', '--config-file', metavar='FILE', 
-        default='~/.backup.rc', help='The configuration file to use')
-    parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
-        default=False, help='Enabled verbose output')
-    (options, args) = parser.parse_args()
-    return options
-
-class Config(object):
-    """Loads the configuration from the config file."""
-
-    def __init__(self, filepath='~/.backup.rc'):
-        rc_file = join(os.path.expanduser(filepath))
-        try:
-            config = json.load(open(rc_file))
-        except IOError:
-            print "Failed to open the config file %s" % rc_file
-            import sys
-            sys.exit(1)
-        except ValueError:
-            print "The config file could not be parsed"
-            import sys
-            sys.exit(1)
-
-        self.key_id = config['access_key_id']
-        self.secret_key = config['secret_access_key']
-        self.sync = config['sync']
 
 def _compute_md5(path, block_size=8192):
     f = open(path)
@@ -102,8 +67,7 @@ def sync_s3(path, bucket):
             s3_key.set_contents_from_filename(join(path, filename), md5=hash)
 
 if __name__ == '__main__':
-    options = parse_options()
-    config = Config(options.config_file)
+    config = Config()
     conn = S3Connection(config.key_id, config.secret_key)
     for sync in config.sync:
         sync_s3(sync['folder'], conn.get_bucket(sync['bucket']))
