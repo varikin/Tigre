@@ -1,0 +1,11 @@
+{
+    "access_key_id": "MY_KEY",
+    "secret_access_key": "MYSECRET_KEY",
+    "sync": [
+        {
+            "bucket": "nerdgames",
+            "folder": "/Users/varikin/code/nerdgames"
+        }
+    ]
+}
+
