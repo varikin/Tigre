@@ -31,4 +31,5 @@ setup(
         "Operating System :: Unix",
         "Programming Language :: Python",
     ],
+    zip_ok = False,
 ) 
