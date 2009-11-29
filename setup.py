@@ -22,7 +22,7 @@ setup(
     url = "http://github.com/varikin/tigre",
     py_module = ['tigre'],
     scripts = ['tigre'],
-    long_description = read('README'),
+    long_description = read('README.rst'),
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Topic :: System :: Archiving :: Backup",
