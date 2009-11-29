@@ -43,7 +43,7 @@ class Config(object):
     def parse_options(self):
         parser = OptionParser()
         parser.add_option('-c', '--config-file', metavar='FILE', dest='config_file',
-                default='~/.tigre.rc', help='The configuration file to use')
+                default='~/.tigrerc', help='The configuration file to use')
         parser.add_option('-k', '--key', metavar='ACCESS_KEY_ID', dest='key',
                 default=None, help='The access key id for the S3 account')
         parser.add_option('-s', '--secret', metavar='SECRET_ACCESS_KEY', dest='secret',

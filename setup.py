@@ -20,8 +20,8 @@ setup(
     license = "Apache Software License 2.0",
     keywords = "backup S3 Amazon sync",
     url = "http://github.com/varikin/tigre",
-    py_module = ['tigre'],
-    scripts = ['tigre'],
+    packages = ['tigre'],
+    scripts = ['scripts/tigre'],
     long_description = read('README.rst'),
     classifiers = [
         "Development Status :: 3 - Alpha",
@@ -31,5 +31,5 @@ setup(
         "Operating System :: Unix",
         "Programming Language :: Python",
     ],
-    zip_ok = False,
+    zip_safe = False,
 ) 
