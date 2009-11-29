@@ -20,6 +20,7 @@ setup(
     license = "Apache Software License 2.0",
     keywords = "backup S3 Amazon sync",
     url = "http://github.com/varikin/tigre",
+    py_module = ['tigre'],
     scripts = ['tigre'],
     long_description = read('README'),
     classifiers = [
