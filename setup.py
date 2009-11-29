@@ -13,7 +13,7 @@ def read(fname):
 
 setup(
     name = "tigre",
-    version = "0.1",
+    version = "0.1.3",
     author = "John Shimek",
     author_email = "varikin@gmail.com",
     description = ("Syncs directories to buckets on S3."),
@@ -31,5 +31,6 @@ setup(
         "Operating System :: Unix",
         "Programming Language :: Python",
     ],
+    install_requires = ['boto', 'simplejson'],
     zip_safe = False,
 ) 
