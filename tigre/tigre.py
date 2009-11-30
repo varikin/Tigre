@@ -92,8 +92,9 @@ class Tigre(object):
         path: The path to the directory to sync to S3
         bucket: The name of the bucket on S3
         """
+        bucket = self.conn.get_bucket(bucket)
         local_files = self._get_local_files(path)
-        s3_files = self._get_s3_files(self.conn.get_bucket(bucket))
+        s3_files = self._get_s3_files(bucket)
         for filename, hash in local_files.iteritems():
             s3_key = s3_files[filename]
             if s3_key is None:

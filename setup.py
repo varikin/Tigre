@@ -23,7 +23,7 @@ def read(fname):
 
 setup(
     name = "tigre",
-    version = "0.1.5",
+    version = "0.1.6",
     author = "John Shimek",
     author_email = "varikin@gmail.com",
     description = ("Syncs directories to buckets on S3."),
